@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="/templates/template.xhtml">
+            <ui:define name="maincontent">
+                <b:panel rendered="#{attendenceBean.list}" look="primary" title="Attendence" collapsible="false">
+                    <p:dataTable rendered="#{activeUser.educator or activeUser.headOfDepartment or activeUser.principal}"  value="#{attendenceBean.attendences}" var="attendence" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false" reflow="true" rows="10">
+                        <f:facet name="header">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <b:commandButton icon-size="lg" icon-awesome="fa-plus-square-o" action="#{attendenceBean.addOrUpdate(null)}" update="@form"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </f:facet>
+                        <p:column headerText="Attendance Date">
+                            <h:outputText value="#{attendence.attendanceDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>                    
+                        <p:column headerText="Session Name">
+                            <h:outputText value="#{attendence.name}"/>
+                        </p:column>
+                        <p:column headerText="Session description">
+                            <h:outputText value="#{attendence.description}"/>
+                        </p:column>
+                        <p:column headerText="Grade/Level">
+                            <h:outputText value="#{attendence.grade.designation}"/>
+                        </p:column>
+                        <p:column headerText="Subject">
+                            <h:outputText value="#{attendence.subject.name} #{attendence.subject.code}"/>
+                        </p:column>
+                        <p:column headerText="Facility">
+                            <h:outputText value="#{attendence.facility.name} #{attendence.facility.location}"/>
+                        </p:column>
+                        <p:column headerText="Educator">
+                            <h:outputText value="#{attendence.teacher.firstName} #{attendence.teacher.lastName}"/>
+                        </p:column>
+                        <p:column headerText="Status">
+                            <h:outputText value="#{attendence.status.toString()}"/>
+                        </p:column>
+                        <p:column headerText="Action">
+                            <b:commandButton icon-size="lg" icon-awesome="pencil" action="#{attendenceBean.addOrUpdate(attendence)}" update="@form"/>
+                            <p:spacer width="5px"/>
+                            <b:commandButton icon-size="lg" icon-awesome="remove" action="#{attendenceBean.delete(attendence)}" update="@form"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:dataTable rendered="#{activeUser.learner}" value="#{attendenceBean.attendences}" var="attendend" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false" reflow="true" rows="10">
+                        <p:column headerText="Attendance Date">
+                            <h:outputText value="#{attend2.attendanceDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>                    
+                        <p:column headerText="Session Name">
+                            <h:outputText value="#{attendend.name}"/>
+                        </p:column>
+                        <p:column headerText="Session description">
+                            <h:outputText value="#{attendend.description}"/>
+                        </p:column>
+                        <p:column headerText="Grade/Level">
+                            <h:outputText value="#{attendend.grade.designation}"/>
+                        </p:column>
+                        <p:column headerText="Subject">
+                            <h:outputText value="#{attendend.subject.name} #{attendend.subject.code}"/>
+                        </p:column>
+                        <p:column headerText="Facility">
+                            <h:outputText value="#{attendend.facility.name} #{attendend.facility.location}"/>
+                        </p:column>
+                        <p:column headerText="Educator">
+                            <h:outputText value="#{attendend.teacher.firstName} #{attendend.teacher.lastName}"/>
+                        </p:column>
+                        <p:column headerText="Status">
+                            <h:outputText value="#{attendend.status.toString()}"/>
+                        </p:column>
+                    </p:dataTable>
+                </b:panel>
+                <b:panel rendered="#{attendenceBean.add}" look="primary" title="Attendence" collapsible="false">
+                    <b:panelGrid colSpans="12" size="md" style-class="ui-fluid">
+                        <b:inputText value="#{attendenceBean.attendence.name}" label="Session Name" field-size="md"/>
+                        <b:inputText value="#{attendenceBean.attendence.description}" label="Session Description" field-size="md"/>
+                        <b:dateTimePicker mode="icon-popup" value="#{attendenceBean.attendence.attendanceDate}" label="Session Date" field-size="md"/>
+                        <b:formGroup>
+                            <p:outputLabel value="Grade"/>
+                            <p:selectOneMenu label="Grade" value="#{attendenceBean.attendence.grade}" converter="entityConverter" filter="false">
+                                <f:selectItems value="#{attendenceBean.teacher.grades}" var="grd" itemLabel="#{grd.designation}" itemValue="#{grd}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                        <b:formGroup>
+                            <p:outputLabel value="Subject"/>
+                            <p:selectOneMenu label="Subject" value="#{attendenceBean.attendence.subject}" converter="entityConverter" filter="false">
+                                <f:selectItems value="#{attendenceBean.teacher.subjectList}" var="subject" itemLabel="#{subject.name} #{subject.code}" itemValue="#{subject}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                        <b:formGroup>
+                            <p:outputLabel value="Facility"/>
+                            <p:selectOneMenu label="Facility" value="#{attendenceBean.attendence.facility}" converter="entityConverter" filter="false">
+                                <f:selectItems value="#{attendenceBean.facilities}" var="facility" itemLabel="#{facility.name} #{facility.location}" itemValue="#{facility}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                        <b:formGroup>
+                            <p:outputLabel value="Status"/>
+                            <p:selectOneMenu label="Status" value="#{attendenceBean.attendence.status}" converter="entityConverter" filter="false">
+                                <f:selectItems value="#{attendenceBean.attendanceStatuses}" var="status" itemLabel="#{status.toString()}" itemValue="#{status}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                    </b:panelGrid>
+                    <f:facet name="footer">
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <b:commandButton size="xs" look="success" value="save" action="#{attendenceBean.save(assessmentBean.assessment)}" update="@form"/>
+                                <p:spacer width="15px"/>
+                                <b:commandButton size="xs" look="danger" value="cancel" action="#{attendenceBean.cancel(assessmentBean.assessment)}" update="@form"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </f:facet>
+                </b:panel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

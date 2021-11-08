@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="/templates/template.xhtml">
+            <ui:define name="maincontent">
+                <b:panel rendered="#{assesmentBean.list}" look="primary" title="Assessment" collapsible="false">
+                    <p:dataTable rendered="#{not activeUser.systemAdmin or not activeUser.officeAdmin}" value="#{assesmentBean.assesments}" var="assessm" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false" reflow="true" rows="10">
+                        <f:facet name="header">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <b:commandButton rendered="#{not activeUser.learner}" icon-size="lg" icon-awesome="fa-plus-square-o" action="#{assesmentBean.addorUpdate(null)}" update="@form"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </f:facet>
+                        <p:column headerText="Created Date">
+                            <h:outputText value="#{assessm.createdDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>                    
+                        <p:column headerText="Assessment Name">
+                            <h:outputText value="#{assessm.name}"/>
+                        </p:column>
+                        <p:column headerText="Assessment description">
+                            <h:outputText value="#{assessm.description}"/>
+                        </p:column>
+                        <p:column headerText="Student Full Names">
+                            <h:outputText value="#{assessm.student.firstName} #{assessm.student.lastName}"/>
+                        </p:column>
+                        <p:column headerText="Student Number">
+                            <h:outputText value="#{assessm.student.studentId}"/>
+                        </p:column>
+                        <p:column headerText="Subject Details">
+                            <h:outputText value="#{assessm.subject.name} #{assess.subject.code}"/>
+                        </p:column>
+                        <p:column headerText="Due Date">
+                            <h:outputText value="#{assessm.dueDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="First Submission Date">
+                            <h:outputText value="#{assessm.firstSubmissionDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Final Submission Date">
+                            <h:outputText value="#{assessm.updatedDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Total Mark">
+                            <h:outputText value="#{assessm.fullMark}"/>
+                        </p:column>
+                        <p:column headerText="Pass Mark">
+                            <h:outputText value="#{assessm.passMark}"/>
+                        </p:column>
+                        <p:column headerText="Student Mark">
+                            <h:outputText value="#{assessm.studentMark}"/>
+                        </p:column>                        
+                        <p:column rendered="#{not activeUser.learner}" headerText="Action">
+                            <b:commandButton icon-size="lg" icon-awesome="pencil" action="#{assesmentBean.addorUpdate(assessm)}" update="@form"/>
+                        </p:column>
+                    </p:dataTable>
+                    <p:dataTable rendered="#{activeUser.systemAdmin or activeUser.officeAdmin}" value="#{assesmentBean.listassesments}" var="assessm" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false" reflow="true" rows="10">
+                        <f:facet name="header">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <b:commandButton rendered="#{not activeUser.learner}" icon-size="lg" icon-awesome="fa-plus-square-o" action="#{assesmentBean.addorUpdate(null)}" update="@form"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </f:facet>
+                        <p:column headerText="Created Date">
+                            <h:outputText value="#{assessm.createdDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>                    
+                        <p:column headerText="Assessment Name">
+                            <h:outputText value="#{assessm.name}"/>
+                        </p:column>
+                        <p:column headerText="Assessment description">
+                            <h:outputText value="#{assessm.description}"/>
+                        </p:column>
+                        <p:column headerText="Student Full Names">
+                            <h:outputText value="#{assessm.student.firstName} #{assessm.student.lastName}"/>
+                        </p:column>
+                        <p:column headerText="Student Number">
+                            <h:outputText value="#{assessm.student.studentId}"/>
+                        </p:column>
+                        <p:column headerText="Subject">
+                            <h:outputText value="#{assessm.subject.name} #{assessm.subject.code}"/>
+                        </p:column>
+                        <p:column headerText="Due Date">
+                            <h:outputText value="#{assessm.dueDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="First Submission Date">
+                            <h:outputText value="#{assessm.firstSubmissionDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Latest Submission Date">
+                            <h:outputText value="#{assessm.updatedDate}">
+                                <f:convertDateTime pattern="yyyy MM dd"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Total Mark">
+                            <h:outputText value="#{assessm.fullMark}"/>
+                        </p:column>
+                        <p:column headerText="Pass Mark">
+                            <h:outputText value="#{assessm.passMark}"/>
+                        </p:column>
+                        <p:column headerText="Student Mark">
+                            <h:outputText value="#{assessm.studentMark}"/>
+                        </p:column>                        
+                        <p:column headerText="Action">
+                            <b:commandButton icon-size="lg" icon-awesome="pencil" action="#{assesmentBean.addorUpdate(assessm)}" update="@form"/>
+                            <p:spacer width="5px"/>
+                            <b:commandButton icon-size="lg" icon-awesome="remove" action="#{assesmentBean.delete(assessm)}" update="@form"/>
+                        </p:column>
+                    </p:dataTable>
+                </b:panel>
+                <b:panel rendered="#{assesmentBean.add}" look="primary" title="Assessment" collapsible="false">
+                    <b:panelGrid colSpans="12" size="md" style-class="ui-fluid">
+                        <b:inputText value="#{assesmentBean.assesment.name}" label="Assessment Name" field-size="md"/>
+                        <b:inputText value="#{assesmentBean.assesment.description}" label="Assessment Description" field-size="md"/>
+                        <b:dateTimePicker mode="icon-popup" value="#{assessmentBean.assesment.dueDate}" label="Due Date" field-size="md"/>
+                        <b:inputText value="#{assesmentBean.assesment.fullMark}" label="Full Mark" field-size="md"/>
+                        <b:inputText value="#{assesmentBean.assesment.passMark}" label="Pass Mark" field-size="md"/>
+                        <b:formGroup>
+                            <p:outputLabel value="Grade"/>
+                            <p:selectOneMenu label="Grade" value="#{assesmentBean.assesment.grade}" converter="entityConverter" filter="false">
+                                <p:ajax update="@form" listener="#{assessmentBean.gradeSelectionListener}"/>
+                                <f:selectItems value="#{assesmentBean.teacher.grades}" var="grade" itemLabel="#{grade.designation}" itemValue="#{grade}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                        <b:formGroup rendered="#{assesmentBean.visible}">
+                            <p:outputLabel value="Student"/>
+                            <p:selectOneMenu label="Student" value="#{assesmentBean.assesment.student}" converter="entityConverter" filter="false">
+                                <f:selectItems value="#{assesmentBean.students}" var="student" itemLabel="#{student.firstName} #{student.lastName} #{student.identityNumber}" itemValue="#{student}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                        <b:inputText rendered="#{assesmentBean.visible}" value="#{assesmentBean.assesment.studentMark}" label="Student Mark" field-size="md"/>
+                    </b:panelGrid>
+                    <f:facet name="footer">
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <b:commandButton size="xs" look="success" value="save" action="#{assesmentBean.save(assesmentBean.assesment)}" update="@form"/>
+                                <p:spacer width="15px"/>
+                                <b:commandButton size="xs" look="danger" value="cancel" action="#{assesmentBean.cancel(assesmentBean.assesment)}" update="@form"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </f:facet>
+                </b:panel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

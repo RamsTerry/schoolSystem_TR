@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:p="http://primefaces.org/ui">
+    <h:body>
+        <ui:composition template="/templates/template.xhtml">
+            <ui:define name="maincontent">
+                <p:dataTable rendered="#{studentBean.list}" value="#{studentBean.students}" var="st" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false" reflow="true" rows="10">
+                    <f:facet name="header">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <b:commandButton icon-size="lg" icon-awesome="fa-plus-square-o" action="#{studentBean.addOrUpdate(null)}" update="@form"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </f:facet>
+                    <p:column headerText="Registered Date">
+                        <h:outputText value="#{st.createdDate}">
+                            <f:convertDateTime pattern="yyyy MM dd"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Full Names">
+                        <h:outputText value="#{st.firstName} #{st.lastName}"/>
+                    </p:column>
+                    <p:column headerText="Identity Number">
+                        <h:outputText value="#{st.identityNumber}"/>
+                    </p:column>
+                    <p:column headerText="Gender">
+                        <h:outputText value="#{st.genderType.toString()}"/>
+                    </p:column>
+                    <p:column headerText="Student Number">
+                        <h:outputText value="#{st.studentId}"/>
+                    </p:column>
+                    <p:column headerText="Cellphone Number">
+                        <h:outputText value="#{st.contactDetails.cellphoneNumber}"/>
+                    </p:column>
+                    <p:column headerText="Email Address">
+                        <h:outputText value="#{st.contactDetails.emailAddress}"/>
+                    </p:column>
+                    <p:column headerText="Action">
+                        <b:commandButton icon-size="lg" icon-awesome="pencil" action="#{studentBean.addOrUpdate(st)}" update="@form"/>
+                        <p:spacer width="5px"/>
+                        <b:commandButton rendered="#{activeUser.systemAdmin}" icon-size="lg" icon-awesome="remove" action="#{studentBean.delete(st)}" update="@form"/>
+                    </p:column>
+                </p:dataTable>
+                <b:panel rendered="#{studentBean.add}" look="primary" title="Student" collapsible="false">
+                    <b:panelGrid colSpans="12" size="md" style-class="ui-fluid">
+                        <b:inputText value="#{studentBean.student.firstName}" label="First Name" field-size="md"/>
+                        <b:inputText value="#{studentBean.student.lastName}" label="Last Name" field-size="md"/>
+                        <b:inputText value="#{studentBean.student.identityNumber}" label="Identity Number" field-size="md"/>
+                        <b:formGroup>
+                            <p:outputLabel value="Gender Type">
+                                <p:selectOneMenu label="Gender" value="#{studentBean.student.genderType}" converter="entityConverter" filter="false">
+                                    <f:selectItems value="#{studentBean.genders}" var="gender" itemLabel="#{gender.toString()}" itemValue="#{gender}"/>
+                                </p:selectOneMenu>
+                            </p:outputLabel>
+                        </b:formGroup>
+                        <b:inputText value="#{studentBean.student.studentId}" label="Student Number" field-size="md"/>
+                        <b:formGroup>
+                            <p:outputLabel value="Grade"/>
+                            <p:selectOneMenu value="#{studentBean.student.grade}" label="Grade" converter="entityConverter" filter="false">
+                                <f:selectItems value="#{studentBean.grades}" var="graden" itemLabel="#{graden.designation}" itemValue="#{graden}"/>
+                            </p:selectOneMenu>
+                        </b:formGroup>
+                        <b:inputText value="#{studentBean.student.contactDetails.cellphoneNumber}" label="CellPhone Number" field-size="md"/>
+                        <b:inputText value="#{studentBean.student.contactDetails.telephoneNumber}" label="TelePhone Number" field-size="md"/>
+                        <b:inputText value="#{studentBean.student.contactDetails.emailAddress}" label="Email" field-size="md"/>
+                    </b:panelGrid>
+                    <p:dataGrid value="#{studentBean.student.addressList}" var="address" columns="2">
+                        <b:panelGrid col-spans="12" size="md" style-class="ui-fluid">
+                            <p:fieldset legend="#{address.addressType.toString()}">
+                                <b:inputText value="#{address.addressLine1}" label="Address Line 1" field-size="md" readonly="#{addressType eq 'POSTAL'}"/>
+                                <b:inputText value="#{address.addressLine2}" label="Address Line 2" field-size="md"/>
+                                <b:inputText value="#{address.area}" label="Area" field-size="md" readonly="true"/>
+                                <b:inputText value="#{address.street}" label="Street" field-size="md" readonly="#{addressType eq 'POSTAL'}"/>
+                                <b:inputText value="#{address.code}" label="Code" field-size="md" />
+                            </p:fieldset>
+                        </b:panelGrid>
+                    </p:dataGrid>
+                    <b:panelGrid colSpans="12" style-class="ui-fluid" size="md">
+                        <p:fieldset legend="Subjects">
+                            <b:panelGrid id="subjectListStd" colSpans="12" size="md" style-class="ui-fluid">
+                                <h:selectManyCheckbox value="#{studentBean.student.subjects}" layout="pageDirection" converter="entityConverter" collectionType="java.util.ArrayList">
+                                    <f:selectItems value="#{studentBean.subjects}" var="subject" itemLabel="#{subject.name} #{subject.code}" itemValue="#{subject}"/>
+                                </h:selectManyCheckbox>
+                            </b:panelGrid>
+                        </p:fieldset>
+                    </b:panelGrid>   
+                    <f:facet name="footer">
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <b:commandButton size="xs" look="success" value="save" action="#{studentBean.save(studentBean.student)}" update="@form"/>
+                                <p:spacer width="15px"/>
+                                <b:commandButton size="xs" look="danger" value="cancel" action="#{studentBean.cancel(studentBean.student)}" update="@form"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </f:facet>
+                </b:panel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
